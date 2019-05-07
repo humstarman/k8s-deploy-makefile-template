@@ -4,8 +4,7 @@ define replace
 	@find ${MANIFEST} -type f -name "*.yaml" | xargs sed -i s?"$(1)"?"$(2)"?g
 endef
 
-all: cp sed 
-#all: build push deploy logs-init
+all: build push deploy logs-init
 
 .PHONY : compile
 compile:

@@ -1,6 +1,6 @@
 include Makefile.inc
 
-define replace
+define sed
 	@find ${MANIFEST} -type f -name "*.yaml" | xargs sed -i s?"$(1)"?"$(2)"?g
 endef
 
@@ -33,46 +33,46 @@ cp:
 	@find ${MANIFEST} -type f -name "*.sed" | sed s?".sed"?""?g | xargs -I {} cp {}.sed {}
 
 sed:
-	$(call replace, {{.name}}, ${NAME})
-	$(call replace, {{.name0}}, ${NAME0})
-	$(call replace, {{.name1}}, ${NAME1})
-	$(call replace, {{.name2}}, ${NAME2})
-	$(call replace, {{.name3}}, ${NAME3})
-	$(call replace, {{.name4}}, ${NAME4})
-	$(call replace, {{.name5}}, ${NAME5})
-	$(call replace, {{.name6}}, ${NAME6})
-	$(call replace, {{.name7}}, ${NAME7})
-	$(call replace, {{.name8}}, ${NAME8})
-	$(call replace, {{.name9}}, ${NAME9})
-	$(call replace, {{.name10}}, ${NAME10})
-	$(call replace, {{.namespace}}, ${NAMESPACE})
-	$(call replace, {{.port}}, ${PORT})
-	$(call replace, {{.url}}, ${URL})
-	$(call replace, {{.image}}, ${IMAGE})
-	$(call replace, {{.image0}}, ${IMAGE0})
-	$(call replace, {{.image1}}, ${IMAGE1})
-	$(call replace, {{.image2}}, ${IMAGE2})
-	$(call replace, {{.image3}}, ${IMAGE3})
-	$(call replace, {{.image4}}, ${IMAGE4})
-	$(call replace, {{.image5}}, ${IMAGE5})
-	$(call replace, {{.image6}}, ${IMAGE6})
-	$(call replace, {{.image7}}, ${IMAGE7})
-	$(call replace, {{.image8}}, ${IMAGE8})
-	$(call replace, {{.image10}}, ${IMAGE10})
-	$(call replace, {{.image.pull.policy}}, ${IMAGE_PULL_POLICY})
-	$(call replace, {{.image.pull.policy2}}, ${IMAGE_PULL_POLICY2})
-	$(call replace, {{.labels.key}}, ${LABELS_KEY})
-	$(call replace, {{.labels.value}}, ${LABELS_VALUE})
-	$(call replace, {{.scripts.cm}}, ${SCRIPTS_CM})
-	$(call replace, {{.conf.cm}}, ${CONF_CM})
-	$(call replace, {{.env.cm}}, ${ENV_CM})
-	$(call replace, {{.proxy}}, ${PROXY})
-	$(call replace, {{.discovery.name}}, ${DISCOVERY_NAME})
-	$(call replace, {{.discovery.namespace}}, ${DISCOVERY_NAMESPACE})
-	$(call replace, {{.object}}, ${OBJECT})
-	$(call replace, {{.service.account}}, ${SERVICE_ACCOUNT})
-	$(call replace, {{.svc1}}, ${SVC1})
-	$(call replace, {{.svc2}}, ${SVC2})
+	$(call sed, {{.name}}, ${NAME})
+	$(call sed, {{.name0}}, ${NAME0})
+	$(call sed, {{.name1}}, ${NAME1})
+	$(call sed, {{.name2}}, ${NAME2})
+	$(call sed, {{.name3}}, ${NAME3})
+	$(call sed, {{.name4}}, ${NAME4})
+	$(call sed, {{.name5}}, ${NAME5})
+	$(call sed, {{.name6}}, ${NAME6})
+	$(call sed, {{.name7}}, ${NAME7})
+	$(call sed, {{.name8}}, ${NAME8})
+	$(call sed, {{.name9}}, ${NAME9})
+	$(call sed, {{.name10}}, ${NAME10})
+	$(call sed, {{.namespace}}, ${NAMESPACE})
+	$(call sed, {{.port}}, ${PORT})
+	$(call sed, {{.url}}, ${URL})
+	$(call sed, {{.image}}, ${IMAGE})
+	$(call sed, {{.image0}}, ${IMAGE0})
+	$(call sed, {{.image1}}, ${IMAGE1})
+	$(call sed, {{.image2}}, ${IMAGE2})
+	$(call sed, {{.image3}}, ${IMAGE3})
+	$(call sed, {{.image4}}, ${IMAGE4})
+	$(call sed, {{.image5}}, ${IMAGE5})
+	$(call sed, {{.image6}}, ${IMAGE6})
+	$(call sed, {{.image7}}, ${IMAGE7})
+	$(call sed, {{.image8}}, ${IMAGE8})
+	$(call sed, {{.image10}}, ${IMAGE10})
+	$(call sed, {{.image.pull.policy}}, ${IMAGE_PULL_POLICY})
+	$(call sed, {{.image.pull.policy2}}, ${IMAGE_PULL_POLICY2})
+	$(call sed, {{.labels.key}}, ${LABELS_KEY})
+	$(call sed, {{.labels.value}}, ${LABELS_VALUE})
+	$(call sed, {{.scripts.cm}}, ${SCRIPTS_CM})
+	$(call sed, {{.conf.cm}}, ${CONF_CM})
+	$(call sed, {{.env.cm}}, ${ENV_CM})
+	$(call sed, {{.proxy}}, ${PROXY})
+	$(call sed, {{.discovery.name}}, ${DISCOVERY_NAME})
+	$(call sed, {{.discovery.namespace}}, ${DISCOVERY_NAMESPACE})
+	$(call sed, {{.object}}, ${OBJECT})
+	$(call sed, {{.service.account}}, ${SERVICE_ACCOUNT})
+	$(call sed, {{.svc1}}, ${SVC1})
+	$(call sed, {{.svc2}}, ${SVC2})
 	@find ${MANIFEST} -type f -name "*.yaml" | xargs sed -i s?"{{.schedule}}"?"${SCHEDULE}"?g
 
 deploy-main: OP=create
@@ -145,8 +145,8 @@ clean-cj:
 	@cd ${CJ} && make clean
 
 test-sed:
-	@$(call replace, {{.name0}} ${NAME0}
-	@$(call replace, {{.name10}} ${NAME10}
+	@$(call sed, {{.name0}} ${NAME0}
+	@$(call sed, {{.name10}} ${NAME10}
 
 pod:
 	@kubectl -n ${NAMESPACE} get pods

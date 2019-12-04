@@ -75,54 +75,44 @@ sed:
 	$(call sed, {{.svc2}}, ${SVC2})
 	@find ${MANIFEST} -type f -name "*.yaml" | xargs sed -i s?"{{.schedule}}"?"${SCHEDULE}"?g
 
-deploy-main: OP=create
-deploy-main:
-	@kubectl -n ${NAMESPACE} ${OP} configmap ${SCRIPTS_CM} --from-file ${SCRIPTS}/.
-	@kubectl -n ${NAMESPACE} ${OP} configmap ${CONF_CM} --from-file ${CONF}/.
-	@kubectl ${OP} -f ${MANIFEST}/configmap.yaml
-	@kubectl ${OP} -f ${MANIFEST}/daemonset.yaml
-	@kubectl ${OP} -f ${MANIFEST}/service.yaml
-	@kubectl ${OP} -f ${MANIFEST}/ingress.yaml
-	@kubectl ${OP} -f ${MANIFEST}/job.yaml
+create:
+	@kubectl -n ${NAMESPACE} $@ configmap ${SCRIPTS_CM} --from-file ${SCRIPTS}/.
+	@kubectl -n ${NAMESPACE} $@ configmap ${CONF_CM} --from-file ${CONF}/.
+	@kubectl $@ -f ${MANIFEST}/configmap.yaml
+	@kubectl $@ -f ${MANIFEST}/daemonset.yaml
+	@kubectl $@ -f ${MANIFEST}/service.yaml
+	@kubectl $@ -f ${MANIFEST}/ingress.yaml
+	@kubectl $@ -f ${MANIFEST}/job.yaml
+
+deploy: cp sed create
 
 deploy-cp: OP=create
 deploy-cp:
-	@kubectl ${OP} -f ${MANIFEST}/cronjob.yaml
+	@kubectl $@ -f ${MANIFEST}/cronjob.yaml
 
 deploy: cp sed deploy-main deploy-cp
 
 deploy-one-off: OP=create
 deploy-one-off: cp sed
-	@kubectl ${OP} -f ${MANIFEST}/namespace.yaml
-	@kubectl ${OP} -f ${MANIFEST}/rbac.yaml
-	#@kubectl ${OP} configmap ${ADMIN}--from-file=conf=${ADMIN_CONF_PATH}
+	@kubectl $@ -f ${MANIFEST}/namespace.yaml
+	@kubectl $@ -f ${MANIFEST}/rbac.yaml
+	#@kubectl $@ configmap ${ADMIN}--from-file=conf=${ADMIN_CONF_PATH}
 
-clean-main: OP=delete
-clean-main:
-	@kubectl -n ${NAMESPACE} ${OP} configmap ${SCRIPTS_CM}
-	@kubectl -n ${NAMESPACE} ${OP} configmap ${CONF_CM}
-	@kubectl ${OP} -f ${MANIFEST}/configmap.yaml
-	@kubectl ${OP} -f ${MANIFEST}/daemonset.yaml
-	@kubectl ${OP} -f ${MANIFEST}/service.yaml
-	@kubectl ${OP} -f ${MANIFEST}/ingress.yaml
-	@kubectl ${OP} -f ${MANIFEST}/job.yaml
+delete:
+	@kubectl -n ${NAMESPACE} $@ configmap ${SCRIPTS_CM}
+	@kubectl -n ${NAMESPACE} $@ configmap ${CONF_CM}
+	@kubectl $@ -f ${MANIFEST}/configmap.yaml
+	@kubectl $@ -f ${MANIFEST}/daemonset.yaml
+	@kubectl $@ -f ${MANIFEST}/service.yaml
+	@kubectl $@ -f ${MANIFEST}/ingress.yaml
+	@kubectl $@ -f ${MANIFEST}/job.yaml
 
-clean-cp: OP=delete
-clean-cp:
-	@kubectl ${OP} -f ${MANIFEST}/cronjob.yaml
-
-clean: clean-main clean-cp
-
-clean-one-off: OP=create
-clean-one-off:
-	@kubectl ${OP} -f ${MANIFEST}/namespace.yaml
-	@kubectl ${OP} -f ${MANIFEST}/rbac.yaml
-	#@kubectl ${OP} configmap ${ADMIN}
+clean: delete
 
 mkcm: OP=create
 mkcm:
 	-@kubectl -n ${NAMESPACE} delete configmap $(CM_NAME)
-	@kubectl -n ${NAMESPACE} ${OP} configmap $(CM_NAME) --from-file ${CONF}/. --from-file ${SCRIPTS}/.
+	@kubectl -n ${NAMESPACE} $@ configmap $(CM_NAME) --from-file ${CONF}/. --from-file ${SCRIPTS}/.
 
 dump:
 	@ansible k8s -m shell -a "rm -rf /data/redis0/*; rm -rf /data/redis1/*"

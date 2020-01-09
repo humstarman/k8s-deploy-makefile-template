@@ -135,8 +135,8 @@ clean-cj:
 	@cd ${CJ} && make clean
 
 test-sed:
-	@$(call sed, {{.name0}} ${NAME0}
-	@$(call sed, {{.name10}} ${NAME10}
+	@$(call sed, {{.name0}} ${NAME0})
+	@$(call sed, {{.name10}} ${NAME10})
 
 pod:
 	@kubectl -n ${NAMESPACE} get pods
